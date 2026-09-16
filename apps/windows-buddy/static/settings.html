@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ตั้งค่า Talk Buddy</title>
+    <link rel="stylesheet" href="ui.css" />
+  </head>
+  <body class="settings-body">
+    <h1>ตั้งค่า Talk Buddy</h1>
+    <p class="lede">
+      กดปุ่มลัดแล้วถ่ายหน้าจอเฉพาะตอนถาม ความฉลาดมาจากโมเดลที่คุณเสียบคีย์เอง ไม่ส่องจอตลอดเวลา
+    </p>
+    <label>OpenAI API key</label>
+    <input id="openaiApiKey" type="password" autocomplete="off" placeholder="sk-..." />
+    <label>โมเดลภาพ (แนะนำ gpt-4o-mini เพื่อประหยัด)</label>
+    <input id="visionModel" type="text" />
+    <label>ปุ่มลัด</label>
+    <input id="hotkey" type="text" />
+    <label>เสียงพูด (OpenAI TTS)</label>
+    <select id="ttsVoice">
+      <option value="nova">nova</option>
+      <option value="shimmer">shimmer</option>
+      <option value="alloy">alloy</option>
+      <option value="echo">echo</option>
+      <option value="fable">fable</option>
+      <option value="onyx">onyx</option>
+    </select>
+    <label class="check"><input id="ttsEnabled" type="checkbox" /> อ่านคำตอบออกเสียงไทย</label>
+    <label class="check"><input id="buddyEnabled" type="checkbox" /> จุด buddy ตามเมาส์</label>
+    <label class="check"
+      ><input id="micEnabled" type="checkbox" /> เปิดไมค์ (ตัวเลือก — ไม่มีไมค์ก็พิมพ์ได้)</label
+    >
+    <p id="saveMsg" class="hint"></p>
+    <button id="save" type="button">บันทึก</button>
+    <script src="settings.js"></script>
+  </body>
+</html>
