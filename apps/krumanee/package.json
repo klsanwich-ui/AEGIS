@@ -1,8 +1,9 @@
 {
-  "name": "windows-talk-buddy",
+  "name": "krumanee",
+  "productName": "KruManee",
   "version": "0.1.0",
   "private": true,
-  "description": "Windows Talk MVP: hotkey screen buddy with typed ask, Thai voice, and on-screen pointing",
+  "description": "ครูมณี (KruManee): hotkey screen teacher with typed ask, Thai voice, and on-screen pointing",
   "main": "dist/main/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",

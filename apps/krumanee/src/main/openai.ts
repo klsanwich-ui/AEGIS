@@ -1,6 +1,6 @@
 import { parsePointTags, stripPointTags } from "../shared/types";
 
-const SYSTEM_PROMPT = `คุณเป็นเพื่อนสอนงานบนหน้าจอ Windows ชื่อ Talk Buddy
+const SYSTEM_PROMPT = `คุณเป็นครูสอนงานบนหน้าจอ Windows ชื่อ ครูมณี (KruManee)
 ตอบเป็นภาษาไทย สั้น ชัด เดินทีละขั้น
 คุณเห็นภาพหน้าจอที่ผู้ใช้กำลังดูอยู่ตอนกดปุ่มลัด
 เมื่อต้องการชี้ปุ่ม เมนู หรือจุดบนจอ ให้ใส่แท็กในคำตอบ (พิกัดเป็นเปอร์เซ็นต์ของภาพ 0-100):

@@ -118,7 +118,7 @@ function openSettings(): void {
   settingsWindow = new BrowserWindow({
     width: 480,
     height: 620,
-    title: "ตั้งค่า Talk Buddy",
+    title: "ตั้งค่า ครูมณี",
     webPreferences: {
       preload: path.join(__dirname, "../preload/index.js"),
       contextIsolation: true,
@@ -133,7 +133,7 @@ function openSettings(): void {
 
 function createTray(): void {
   tray = new Tray(iconImage());
-  tray.setToolTip("Talk Buddy");
+  tray.setToolTip("ครูมณี");
   tray.setContextMenu(
     Menu.buildFromTemplate([
       { label: "ถาม (ปุ่มลัด)", click: () => void beginAsk() },
@@ -279,6 +279,7 @@ if (!gotLock) {
 } else {
   app.on("second-instance", () => openSettings());
   app.whenReady().then(() => {
+    app.setName("KruManee");
     if (process.platform === "darwin") {
       app.dock?.hide();
     }
