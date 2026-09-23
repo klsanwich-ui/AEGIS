@@ -1,0 +1,4 @@
+{
+  "name": "AEGIS / KruManee",
+  "install": "cd apps/krumanee && npm ci && npm run build"
+}
