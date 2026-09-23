@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ถามครูมณี</title>
+    <link rel="stylesheet" href="ui.css" />
+  </head>
+  <body class="ask-body">
+    <div class="ask-card">
+      <header>
+        <strong>ครูมณี</strong>
+        <span id="status">ถ่ายหน้าจอแล้ว — พิมพ์คำถามได้เลย ไม่ต้องมีไมค์</span>
+      </header>
+      <textarea id="question" rows="4" placeholder="เช่น ปุ่มนี้ทำอะไร / อธิบายหน้าจอนี้เป็นภาษาไทย"></textarea>
+      <div class="row">
+        <button id="mic" class="ghost hidden" type="button">พูดแทนพิมพ์</button>
+        <span class="flex"></span>
+        <button id="cancel" class="ghost" type="button">ปิด</button>
+        <button id="send" type="button">ถาม</button>
+      </div>
+      <p id="error" class="error"></p>
+      <div id="answer" class="answer hidden"></div>
+    </div>
+    <script src="ask.js"></script>
+  </body>
+</html>

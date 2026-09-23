@@ -1,0 +1,6 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+apps/krumanee/node_modules/
+apps/krumanee/dist/
