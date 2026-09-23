@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ครูมณี</title>
+    <link rel="stylesheet" href="ui.css" />
+  </head>
+  <body class="home-body">
+    <header class="home-head">
+      <p class="eyebrow">ครูบน Windows</p>
+      <h1>ครูมณี</h1>
+      <p class="lede">เห็นหน้าจอตอนคุณเรียก แล้วสอนเป็นภาษาไทย หรือลงมือทำให้</p>
+    </header>
+
+    <section class="mode">
+      <h2>สอน</h2>
+      <p class="hint">ถามได้ทุกเรื่องจากภาพหน้าจอ เช่น วิธีทำเพลงหรือเทคนิคตัดต่อ ครูมณีตอบเป็นเสียงและชี้จุดบนจอ</p>
+      <button id="teach" type="button">ถามจากหน้าจอ</button>
+    </section>
+
+    <section class="mode">
+      <h2>ทำให้</h2>
+      <p class="hint">
+        คำสั่งเปิด YouTube เปิดโปรแกรม หรือเปิดโฟลเดอร์ ทำให้ทันทีโดยไม่เรียกโมเดล พิมพ์ตกเช่น youtub ก็เปิดได้
+      </p>
+      <textarea id="command" rows="3" placeholder="เช่น เปิด youtub หรือ เปิดโน้ตแพด"></textarea>
+      <div class="chips">
+        <button class="ghost" type="button" data-cmd="เปิด youtub">เปิด YouTube</button>
+        <button class="ghost" type="button" data-cmd="เปิดโน้ตแพด">เปิดโน้ตแพด</button>
+        <button class="ghost" type="button" data-cmd="เปิดเครื่องคิดเลข">เปิดเครื่องคิดเลข</button>
+        <button class="ghost" type="button" data-cmd="เปิดโฟลเดอร์เพลง">เปิดโฟลเดอร์เพลง</button>
+      </div>
+      <button id="run" type="button">ทำให้</button>
+      <div id="confirm" class="confirm hidden">
+        <p id="confirmText"></p>
+        <div class="row">
+          <button id="confirmYes" type="button">ยืนยันให้ทำให้</button>
+          <button id="confirmNo" class="ghost" type="button">ยกเลิก</button>
+        </div>
+      </div>
+      <div id="log" class="log" aria-live="polite"></div>
+    </section>
+
+    <footer class="home-foot">
+      <button id="settings" class="ghost" type="button">ตั้งค่า API key</button>
+      <p id="keyState" class="hint"></p>
+    </footer>
+    <script src="home.js"></script>
+  </body>
+</html>

@@ -21,4 +21,12 @@ contextBridge.exposeInMainWorld("buddy", {
   onConfig: (cb: (cfg: { enabled: boolean }) => void) => {
     ipcRenderer.on("buddy:config", (_e, cfg) => cb(cfg));
   },
+  openAsk: () => ipcRenderer.invoke("home:ask"),
+  openSettings: () => ipcRenderer.invoke("home:settings"),
+  classifyDo: (command: string) => ipcRenderer.invoke("do:classify", command),
+  runDirect: (command: string) => ipcRenderer.invoke("do:direct", command),
+  runAgent: (command: string) => ipcRenderer.invoke("do:agent", command),
+  onDoProgress: (cb: (line: string) => void) => {
+    ipcRenderer.on("do:progress", (_e, line: string) => cb(line));
+  },
 });

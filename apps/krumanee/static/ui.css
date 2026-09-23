@@ -4,7 +4,7 @@
   --card: #1b1f2b;
   --line: #2c3348;
   --text: #eef1f8;
-  --muted: #9aa3b8;
+  --muted: #c5cde0;
   --accent: #4da3ff;
   --danger: #ff7b7b;
   font-family: "Segoe UI", "Leelawadee UI", sans-serif;
@@ -121,4 +121,65 @@ header {
   white-space: pre-wrap;
   font-size: 14px;
   line-height: 1.5;
+}
+
+.home-body {
+  padding: 28px 32px 40px;
+  max-width: 720px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.home-head h1 {
+  font-size: 40px;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.home-body h2 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.mode + .mode,
+.home-foot {
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.confirm {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.confirm p {
+  margin: 0 0 10px;
+}
+
+.log {
+  min-height: 72px;
+  max-height: 180px;
+  overflow: auto;
+  margin-top: 14px;
+}
+
+.log p {
+  margin: 0 0 6px;
+  line-height: 1.45;
 }

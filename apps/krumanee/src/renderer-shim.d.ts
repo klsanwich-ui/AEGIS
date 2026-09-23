@@ -20,6 +20,16 @@ declare global {
         cb: (points: Array<{ x: number; y: number; label: string }>) => void,
       ) => void;
       onConfig: (cb: (cfg: { enabled: boolean }) => void) => void;
+      openAsk: () => Promise<void>;
+      openSettings: () => Promise<void>;
+      classifyDo: (command: string) => Promise<
+        | { kind: "empty" }
+        | { kind: "direct"; action: { summary: string } }
+        | { kind: "agent"; summary: string }
+      >;
+      runDirect: (command: string) => Promise<{ message: string }>;
+      runAgent: (command: string) => Promise<{ log: string[] }>;
+      onDoProgress: (cb: (line: string) => void) => void;
     };
   }
 }

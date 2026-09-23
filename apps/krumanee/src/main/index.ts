@@ -10,6 +10,9 @@ import {
 } from "electron";
 import fs from "node:fs";
 import path from "node:path";
+import { classifyCommand, DirectAction } from "../shared/actions";
+import { openApp, openUrl } from "./act";
+import { runAgent } from "./agent";
 import { captureActiveDisplay } from "./capture";
 import { askVision, synthesizeThaiSpeech, transcribeAudio } from "./openai";
 import { loadSettings, saveSettings } from "./settings";
@@ -19,6 +22,8 @@ let tray: Tray | undefined;
 let overlayWindow: BrowserWindow | undefined;
 let askWindow: BrowserWindow | undefined;
 let settingsWindow: BrowserWindow | undefined;
+let homeWindow: BrowserWindow | undefined;
+let agentBusy = false;
 let mouseTimer: NodeJS.Timeout | undefined;
 let lastCapture:
   | {
@@ -87,6 +92,33 @@ function createOverlay(): void {
   });
 }
 
+function createHome(): void {
+  if (homeWindow && !homeWindow.isDestroyed()) {
+    homeWindow.show();
+    homeWindow.focus();
+    return;
+  }
+  homeWindow = new BrowserWindow({
+    width: 760,
+    height: 760,
+    minWidth: 640,
+    minHeight: 560,
+    title: "ครูมณี",
+    show: true,
+    backgroundColor: "#12141c",
+    autoHideMenuBar: true,
+    webPreferences: {
+      preload: path.join(__dirname, "../preload/index.js"),
+      contextIsolation: true,
+      nodeIntegration: false,
+    },
+  });
+  homeWindow.on("closed", () => {
+    homeWindow = undefined;
+  });
+  void homeWindow.loadFile(path.join(staticDir, "home.html"));
+}
+
 function createAskWindow(): BrowserWindow {
   const cursor = screen.getCursorScreenPoint();
   const win = new BrowserWindow({
@@ -136,13 +168,14 @@ function createTray(): void {
   tray.setToolTip("ครูมณี");
   tray.setContextMenu(
     Menu.buildFromTemplate([
-      { label: "ถาม (ปุ่มลัด)", click: () => void beginAsk() },
+      { label: "เปิดหน้าต่าง", click: () => createHome() },
+      { label: "ถามจากหน้าจอ", click: () => void beginAsk() },
       { label: "ตั้งค่า", click: () => openSettings() },
       { type: "separator" },
       { label: "ออก", click: () => app.quit() },
     ]),
   );
-  tray.on("click", () => openSettings());
+  tray.on("click", () => createHome());
 }
 
 function registerHotkey(settings: AppSettings): void {
@@ -224,10 +257,48 @@ function bindIpc(): void {
     return loadSettings();
   });
 
+  ipcMain.handle("home:ask", () => beginAsk());
+  ipcMain.handle("home:settings", () => {
+    openSettings();
+  });
+  ipcMain.handle("do:classify", (_event, command: string) => classifyCommand(String(command ?? "")));
+  ipcMain.handle("do:direct", async (_event, command: string) => {
+    const plan = classifyCommand(String(command ?? ""));
+    if (plan.kind !== "direct") throw new Error("คำสั่งนี้ไม่ใช่งานที่ทำให้ทันที");
+    return { message: await runDirect(plan.action) };
+  });
+  ipcMain.handle("do:agent", async (_event, command: string) => {
+    if (agentBusy) throw new Error("กำลังทำคำสั่งก่อนหน้านี้อยู่");
+    const settings = loadSettings();
+    if (!settings.openaiApiKey.trim()) {
+      throw new Error("งานนี้ต้องดูจอ ใส่ OpenAI API key ในตั้งค่าก่อน");
+    }
+    agentBusy = true;
+    try {
+      const log = await runAgent({
+        apiKey: settings.openaiApiKey,
+        model: settings.visionModel,
+        command: String(command ?? ""),
+        onProgress: (line) => {
+          if (homeWindow && !homeWindow.isDestroyed()) homeWindow.webContents.send("do:progress", line);
+        },
+        capture: captureActiveDisplay,
+      });
+      return { log };
+    } finally {
+      agentBusy = false;
+    }
+  });
+
   ipcMain.handle("ask:submit", async (_event, question: string) => {
     const settings = loadSettings();
+    const plan = classifyCommand(String(question ?? ""));
+    if (plan.kind === "direct") {
+      const message = await runDirect(plan.action);
+      return { text: message, spokenText: message, points: [], ttsEnabled: false };
+    }
     if (!lastCapture) {
-      throw new Error("ยังไม่มีภาพหน้าจอ — กดปุ่มลัดใหม่");
+      throw new Error("ยังไม่มีภาพหน้าจอ กดถามใหม่อีกครั้ง");
     }
     const result = await askVision({
       apiKey: settings.openaiApiKey,
@@ -277,15 +348,17 @@ const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) {
   app.quit();
 } else {
-  app.on("second-instance", () => openSettings());
+  app.on("second-instance", () => createHome());
   app.whenReady().then(() => {
     app.setName("KruManee");
+    Menu.setApplicationMenu(null);
     if (process.platform === "darwin") {
       app.dock?.hide();
     }
     bindIpc();
     createTray();
     createOverlay();
+    createHome();
     startMouseLoop();
     registerHotkey(loadSettings());
   });
@@ -295,6 +368,11 @@ app.on("will-quit", () => {
   globalShortcut.unregisterAll();
   if (mouseTimer) clearInterval(mouseTimer);
 });
+
+async function runDirect(action: DirectAction): Promise<string> {
+  if (action.type === "open-url") return openUrl(action.url);
+  return openApp(action.app);
+}
 
 app.on("window-all-closed", () => {
   // Stay in the tray until the user quits from the menu.
